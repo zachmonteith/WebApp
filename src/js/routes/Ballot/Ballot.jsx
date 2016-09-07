@@ -25,9 +25,11 @@ export default class Ballot extends Component {
       browserHistory.push("settings/location");
     }
     let ballot = this.getBallot(this.props);
+    console.log("Ballot componentDidMount ballot:", ballot);
     if (ballot !== undefined) {
       let ballot_type = this.props.location.query ? this.props.location.query.type : "all";
       this.setState({ballot: ballot, ballot_type: ballot_type });
+      console.log("after setState, ballot:", this.state.ballot);
     }
     // We need a ballotStoreListener here because we want the ballot to display before positions are received
     this.ballotStoreListener = BallotStore.addListener(this._onChange.bind(this));
@@ -53,7 +55,9 @@ export default class Ballot extends Component {
       browserHistory.push("ballot/empty");
     } else {
       let ballot_type = this.props.location.query ? this.props.location.query.type : "all";
+      console.log("_onChange this.props:", this.props);
       this.setState({ballot: this.getBallot(this.props), ballot_type: ballot_type });
+      console.log("Ballot _onChange this.state.ballot:", this.state.ballot);
     }
   }
 
@@ -120,7 +124,6 @@ export default class Ballot extends Component {
         return "";
     }
   }
-
   render () {
     const ballot = this.state.ballot;
     var voter_address = VoterStore.getAddress();
@@ -163,7 +166,7 @@ export default class Ballot extends Component {
         {emptyBallotButton}
       </div> :
       <div></div>;
-    
+
     let show_expanded_ballot_items = false;
 
     return <div className="ballot">
@@ -184,7 +187,7 @@ export default class Ballot extends Component {
       */}
       {emptyBallot}
       { show_expanded_ballot_items ?
-        ballot.map( (item) => <BallotItem key={item.we_vote_id} {...item} />):
+        ballot.map( (item) => <BallotItem key={item.we_vote_id} {...item} />) :
         ballot.map( (item) => <BallotItemCompressed key={item.we_vote_id} {...item} />)
       }
       </div>;

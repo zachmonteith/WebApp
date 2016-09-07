@@ -3,11 +3,6 @@ var FluxMapStore = require("flux/lib/FluxMapStore");
 const assign = require("object-assign");
 
 class OfficeStore extends FluxMapStore {
-  getOffice (office_we_vote_id) {
-      // if (!this.isLoaded()){ return undefined; }
-      console.log("in getOffice, office_we_vote_id and office:", office_we_vote_id, this.getState().office[office_we_vote_id]);
-      return this.getState().office[office_we_vote_id];
-    }
 
   reduce (state, action) {
 
@@ -15,17 +10,17 @@ class OfficeStore extends FluxMapStore {
     if (!action.res || !action.res.success)
       return state;
 
+    var key;
+    var merged_properties;
+
     switch (action.type) {
 
       case "officeRetrieve":
-        console.log("officeRetrieve action.res", action.res);
-        let office = action.res || {};
-        console.log("in OfficeStore, officeRetrieve office:", office);
-        return {
-          ...state,
-          office: assign({}, state.office, office )
-        };
-
+        console.log("OfficeStore officeRetrieve action.res:", action.res);
+        key = action.res.we_vote_id;
+        console.log("OfficeStore Retrieve Key:", key);
+        merged_properties = assign({}, state.get(key), action.res );
+        return state.set(key, merged_properties );
 
       case "voterBallotItemsRetrieve":
         let offices = {};
